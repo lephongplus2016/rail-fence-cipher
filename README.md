@@ -2,5 +2,6 @@
 
 ## Run
 ```bash
-python mainReadFile.py
+python main.py -t testcase1.txt
+>> key
 ```
