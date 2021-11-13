@@ -2,6 +2,7 @@ import os
 import argparse
 from attack_with_englishdic import Decrypt_withEngDic
 from rail_fence import encryptRailFence, decryptRailFence
+import time
 
 def readfile(file_name):
     file = open(file_name)
@@ -18,17 +19,6 @@ if __name__ == "__main__":
 
 # chi tieng anh va khong co ki tu khac
 #  ke ca dau xuong dong
-	# data = readfile("plaintext.txt")
-	# cipher = encryptRailFence(data,49)
-	# writefile("cipher.txt", cipher)
-	# data = readfile("cipher.txt")
-	# decode = decryptRailFence(data, 49)
-	# writefile("decode.txt",decode)
-
-	# attack by english dictionary
-
-
-	# decrypt_withEngDic_Instance.get_english_score('PASSENGERS ARRIVED AT YEN NGHIA STATION')
 
 	parser = argparse.ArgumentParser()
  
@@ -38,24 +28,30 @@ if __name__ == "__main__":
 	if args.testcase == None:
 		print("Enter testcase file")
 	else:
-		data = readfile(args.testcase)
+		# encrypt rail fence
+		data = readfile("testcase/"+args.testcase)
 		print("Enter rail-fence key from 2 to",(len(data) - 1))
 		RailFenceKey = int(input())
 		cipher = encryptRailFence(data,RailFenceKey)
 		file_name_dest = "cipher_of_" + args.testcase
-		writefile(file_name_dest, cipher)
+		writefile("cipher_rail_fence/" + file_name_dest, cipher)
 
 		# hacking cipher
-		cipher = readfile(file_name_dest)
+		cipher = readfile("cipher_rail_fence/" +file_name_dest)
 		decrypt_withEngDic_Instance = Decrypt_withEngDic()
 
 		print('Decode with Rail_fence Cipher with English Dictionary:')
+		start_time = time.time()
 		resultHacking = decrypt_withEngDic_Instance.decrypt_Rail_fence(cipher)
+		end_time = time.time()
 		print('We calculate the key:')
 		print(resultHacking['key'])
+		elapsed_time = end_time - start_time
+		print ("Elapsed_time: {0}".format(elapsed_time) + "[sec]")
+
 		print('Plaintext:')
 		print(resultHacking['plaintext'])
 
 		# write file
 		file_result = 'result_' + args.testcase 
-		writefile(file_result, "We calculate the key of "+args.testcase+ ":\n" + str(resultHacking['key']) + "\nPlaintext:\n" + resultHacking['plaintext'] )
+		writefile("result_hacking_rail_fence/"+file_result, "We calculate the key of "+args.testcase+ ":\n" + str(resultHacking['key']) + "\nElapsed_time: {0}".format(elapsed_time) + "[sec]" +"\nPlaintext:\n" + resultHacking['plaintext'] )
