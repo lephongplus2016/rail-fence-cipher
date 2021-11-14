@@ -2,6 +2,7 @@
 
 ## Run
 ```bash
-python main.py -t testcase1.txt
+python main.py -m railfence -t testcase1.txt
 >> key
+python main.py -m product -t testcase1.txt
 ```
