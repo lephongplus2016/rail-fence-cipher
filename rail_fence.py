@@ -1,6 +1,12 @@
+def HandleText(text):
+    lst_text = list(text)
+    for i in range(0, len(lst_text)):
+        if int(ord(lst_text[i])) not in range(65, 91) and int(ord(lst_text[i])) not in range(97, 123) and int(ord(lst_text[i])) not in range(48, 58):
+            lst_text[i] = " "
+    return "".join(lst_text)
 # function to encrypt a message
 def encryptRailFence(text, key):
-
+	text = HandleText(text)
 	rail = [['\n' for i in range(len(text))]
 				for j in range(key)]
 	

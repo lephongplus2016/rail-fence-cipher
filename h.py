@@ -6,7 +6,16 @@ with open('testcase.txt') as file:
         if i == 1: key = int(line)
         if i == 2: text = str(line)
         i += 1
+
+def HandleText(text):
+    lst_text = list(text)
+    for i in range(0, len(lst_text)):
+        if int(ord(lst_text[i])) not in range(65, 91) and int(ord(lst_text[i])) not in range(97, 123) and int(ord(lst_text[i])) not in range(48, 58):
+            lst_text[i] = " "
+    return "".join(lst_text)
+
 def MahoaCesar(text, key):
+    HandleText(text)
     lst_text = list(text)
     for i in range(0, len(lst_text)):
         if int(ord(lst_text[i]))==32 or int(ord(lst_text[i]))==44 or int(ord(lst_text[i]))==46: continue

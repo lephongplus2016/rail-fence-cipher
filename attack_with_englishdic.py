@@ -13,6 +13,8 @@ def load_words():
 
 english_words = load_words()
 
+
+
 class Decrypt_withEngDic:
     def isEnglishWord(self, word):
         return word.lower() in english_words
@@ -20,9 +22,9 @@ class Decrypt_withEngDic:
     def get_english_score(self, words):
         # remove special charaters
         words_with_nospecial = re.sub('[^a-zA-Z0-9\n]', ' ', words)
-        # print(words_with_nospecial)
         score = 0
         for word in words_with_nospecial.split():
+        # for word in words.split():
             score += self.isEnglishWord(word)
 
         return score

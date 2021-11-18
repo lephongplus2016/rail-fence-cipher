@@ -52,19 +52,19 @@ if __name__ == "__main__":
 		print(resultHacking['key'])
 		elapsed_time = end_time - start_time
 		print ("Elapsed_time: {0}".format(elapsed_time) + "[sec]")
-
+		print('Score:')
+		print(resultHacking['score'])
 		print('Plaintext:')
 		print(resultHacking['plaintext'])
 
-		# print('Score:')
-		# print(resultHacking['score'])
+		
 		# print('Score 400:')
 		# print(decrypt_withEngDic_Instance.get_english_score("is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. "))
 
 
 		# write file
 		file_result = 'result_' + args.testcase 
-		writefile("result_hacking_rail_fence/"+file_result, "We calculate the key of "+args.testcase+ ":\n" + str(resultHacking['key']) + "\nElapsed_time: {0}".format(elapsed_time) + "[sec]" +"\nPlaintext:\n" + resultHacking['plaintext'] )
+		writefile("result_hacking_rail_fence/"+file_result, "We calculate the key of "+args.testcase+ ":\n" + str(resultHacking['key']) + "\nElapsed_time: {0}".format(elapsed_time) + "[sec]"+'\nScore:\n' + str(resultHacking['score'])  +"\nPlaintext:\n" + resultHacking['plaintext'] )
 
 	elif args.method == "product":
 		# encrypt
