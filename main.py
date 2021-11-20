@@ -1,8 +1,8 @@
-import os
+# import os
 import argparse
 from attack_with_englishdic import Decrypt_withEngDic
 from rail_fence import encryptRailFence, decryptRailFence
-from h import MahoaCesar, TanCongCesar
+from cesar import MahoaCesar, TanCongCesar
 import time
 
 def readfile(file_name):
@@ -11,23 +11,87 @@ def readfile(file_name):
     file.close()
     return data
 
-def writefile(file_name,content):
+# remove old content first
+def overwritefile(file_name,content):
 	with open(file_name, "w") as myfile:
 		myfile.write(content)
 
-def encryptMessageByRailFence(fileTestcase):
+def writefile(file_name,content):
+	with open(file_name, "a") as myfile:
+		myfile.write(content)		
+
+def encryptFileMessageByRailFence(fileTestcase):
 	data = readfile("testcase/"+fileTestcase)
 	print("Enter rail-fence key from 2 to",(len(data) - 1))
 	RailFenceKey = int(input())
 	cipher = encryptRailFence(data,RailFenceKey)
+	print("-----------------------------------")
+	print("Plaintext:")
+	print(data)
+	print("-----------------------------------")
+	print("Rail fence cipher with key = " + str(RailFenceKey) +":")
+	print(cipher)
+	print("-----------------------------------")
+	# write cipher result to file text
 	file_name_dest = "cipher_of_" + fileTestcase
-	writefile("cipher_rail_fence/" + file_name_dest, cipher)
+	overwritefile("cipher_rail_fence/" + file_name_dest, cipher)
+	#  write final result
+	file_result = 'result_' + fileTestcase 
+	content = "-----------------------------------"  + "\nPlaintext:\n" + data + "\n-----------------------------------" + "\nRail fence cipher with key = " + str(RailFenceKey) + ":\n"+ cipher + "\n-----------------------------------\n"
+	overwritefile("result_hacking_rail_fence/" + file_result, content)
+
 	return file_name_dest
 
-if __name__ == "__main__":
+def encryptFileMessageByProduct(fileTestcase):
+	data = readfile("testcase/"+fileTestcase)
+	print("Enter cesar key from 1 to 25")
+	CesarKey = int(input())
+	cipherCesar = MahoaCesar(data, CesarKey)
+	print("Enter rail-fence key from 2 to",(len(data) - 1))
+	RailFenceKey = int(input())
+	cipherProduct = encryptRailFence(cipherCesar, RailFenceKey)  
+	print("-----------------------------------")
+	print("Plaintext:")
+	print(data)
+	print("-----------------------------------")
+	print("Cesar cipher, cesar key = "+ str(CesarKey)+ ":")
+	print(cipherCesar)
+	print("-----------------------------------")
+	print("Rail fence encryption of the generated cesar ciphertext, Rail fence key = " + str(RailFenceKey) + " (Product cipher):")
+	print(cipherProduct)
+	print("-----------------------------------")
+	# write cipher result to file text
+	file_name_dest = "cipher_of_" + fileTestcase
+	overwritefile("cipher_product/" + file_name_dest, cipherProduct)
+	#  write final result
+	file_result = 'result_' + fileTestcase 
+	content = "-----------------------------------"  + "\nPlaintext:\n" + data + "\n-----------------------------------" + "\nCesar cipher, cesar key = "+ str(CesarKey)+ ":\n"+ cipherCesar + "\n-----------------------------------" +"\nRail fence encryption of the generated cesar ciphertext, Rail fence key = " + str(RailFenceKey) + " (Product cipher):\n" + cipherProduct + "\n-----------------------------------\n"
+	overwritefile("result_hacking_product/" + file_result, content)
+	return file_name_dest
 
-# chi tieng anh va khong co ki tu khac
-#  ke ca dau xuong dong
+def printHackingResult(resultHacking, elapsed_time):
+	if 'key' in resultHacking:
+		print('Attack Rail_fence Cipher with English Dictionary:')
+		print('We calculate the key:')
+		print(resultHacking['key'])
+		print ("Elapsed_time: {0}".format(elapsed_time) + "[sec]")
+		print('Score:')
+		print(resultHacking['score'])
+		print('Plaintext:')
+		print(resultHacking['plaintext'])
+	else:
+		print('Attack Product Cipher with English Dictionary:')
+		print('We calculate the key:')
+		print('Cesar key: ' + str(resultHacking['key_cesar']))
+		print('Rail fence key: ' + str(resultHacking['key_rail_fence']))
+		print ("Elapsed_time: {0}".format(elapsed_time) + "[sec]")
+		print('Score:')
+		print(resultHacking['score'])
+		print('Plaintext:')
+		print(resultHacking['plaintext'])
+	print("-----------------------------------")
+
+if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser()
 
@@ -38,29 +102,17 @@ if __name__ == "__main__":
 	args = parser.parse_args()
 	if args.method == "railfence":
 		# encrypt rail fence
-		file_name_dest = encryptMessageByRailFence(args.testcase)
+		file_name_dest = encryptFileMessageByRailFence(args.testcase)
 
 		# hacking cipher
 		cipher = readfile("cipher_rail_fence/" +file_name_dest)
 		decrypt_withEngDic_Instance = Decrypt_withEngDic()
-
-		print('Attack Rail_fence Cipher with English Dictionary:')
+		# Print result
 		start_time = time.time()
 		resultHacking = decrypt_withEngDic_Instance.attack_Rail_fence(cipher)
 		end_time = time.time()
-		print('We calculate the key:')
-		print(resultHacking['key'])
 		elapsed_time = end_time - start_time
-		print ("Elapsed_time: {0}".format(elapsed_time) + "[sec]")
-		print('Score:')
-		print(resultHacking['score'])
-		print('Plaintext:')
-		print(resultHacking['plaintext'])
-
-		
-		# print('Score 400:')
-		# print(decrypt_withEngDic_Instance.get_english_score("is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. "))
-
+		printHackingResult(resultHacking, elapsed_time)
 
 		# write file
 		file_result = 'result_' + args.testcase 
@@ -68,26 +120,19 @@ if __name__ == "__main__":
 
 	elif args.method == "product":
 		# encrypt
-		data = readfile("testcase/"+args.testcase)
-		print("Enter cesar key from 1 to 25")
-		CesarKey = int(input())
-		cipherCesar = MahoaCesar(data, CesarKey)
-		print("Enter rail-fence key from 2 to",(len(data) - 1))
-		RailFenceKey = int(input())
-		cipherProduct = encryptRailFence(cipherCesar, RailFenceKey)  
-		print("Product cipher: ")
-		print(cipherProduct)
+		file_name_dest = encryptFileMessageByProduct(args.testcase)
 
-		# decrypt
-		decryptRailFence = decryptRailFence(cipherProduct, RailFenceKey)
-		decryptCesar = TanCongCesar(decryptRailFence, CesarKey)
-		print("Decode product cipher: ")
-		print(decryptCesar)	
 		# hacking
-		print("Attack product cipher with English Dictionary:")
+		cipherProduct = readfile("cipher_product/" +file_name_dest)
 		decrypt_withEngDic_Instance = Decrypt_withEngDic()
-		print(decrypt_withEngDic_Instance.attack_Product(cipherProduct))
-
+		start_time = time.time()
+		resultHacking = decrypt_withEngDic_Instance.attack_Product(cipherProduct)
+		end_time = time.time()
+		elapsed_time = end_time - start_time
+		printHackingResult(resultHacking,elapsed_time )
+		# write file
+		file_result = 'result_' + args.testcase 
+		writefile("result_hacking_product/"+file_result, "We calculate the key of "+args.testcase+ ":\n" +"Cesar key: "+ str(resultHacking['key_cesar']) +"\nRail fence key: " + str(resultHacking['key_rail_fence']) + "\nElapsed_time: {0}".format(elapsed_time) + "[sec]"+"\nScore:\n" + str(resultHacking['score'])  +"\nPlaintext:\n" + resultHacking['plaintext'] )
 
 	else:
 		raise ValueError("Invalid method.")

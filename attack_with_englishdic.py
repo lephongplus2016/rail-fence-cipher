@@ -1,6 +1,6 @@
 import re 
 import random
-from h import TanCongCesar
+from cesar import TanCongCesar
 from rail_fence import encryptRailFence, decryptRailFence
 
 LIMITS = 50
@@ -45,8 +45,6 @@ class Decrypt_withEngDic:
             candidates.append(result) 
 
         candidates.sort(key=lambda c: c['score'], reverse=True)
-        # for x in candidates:
-        #     print(x)
         return candidates[0]
 
     def attack_Product(self, ciphertext):

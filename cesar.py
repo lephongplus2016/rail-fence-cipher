@@ -23,8 +23,10 @@ def TanCongCesar(text, key):
             if int(ord(lst_text[i])) - key < 65: lst_text[i] = chr(int(ord(lst_text[i])) - key + 26)
             else: lst_text[i] = chr(int(ord(lst_text[i]) - key))
     return "".join(lst_text)
-print("Ma hoa: ", MahoaCesar(text,key))
-print("Tan cong:")
-for i in range(1, 25):
-    print("key = ", i)
-    print(TanCongCesar(MahoaCesar(text, key), i))
+    
+if __name__ == "__main__":
+    print("Ma hoa: ", MahoaCesar(text,key))
+    print("Tan cong:")
+    for i in range(1, 25):
+        print("key = ", i)
+        print(TanCongCesar(MahoaCesar(text, key), i))
