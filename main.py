@@ -176,10 +176,12 @@ if __name__ == "__main__":
 			print("key = ", i)
 			plaintext = TanCongCesar(cipher, i)
 			print(plaintext)
+			print("-----------------------------------")
 			writefile("result_hacking_cesar/"+file_result, "\n-----------------------------------\nKey: "+ str(i) + "\nPlaintext decrypted: \n" + plaintext)
 
 		end_time = time.time()
 		elapsed_time = end_time - start_time
-
+		print ("Elapsed_time: {0}".format(elapsed_time) + "[sec]")
+		writefile("result_hacking_cesar/"+file_result, "\n\nElapsed_time: {0}".format(elapsed_time) + "[sec]")
 	else:
 		raise ValueError("Invalid method.")
