@@ -5,6 +5,11 @@
 python main.py -m railfence -t testcase1.txt
 >> key
 ```
+## Run Cesar
+```bash
+python main.py -m cesar -t testcase1.txt
+>> key
+```
 
 ## Run Product
 ```bash
