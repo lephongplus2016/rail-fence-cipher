@@ -42,6 +42,30 @@ def encryptFileMessageByRailFence(fileTestcase):
 
 	return file_name_dest
 
+def encryptFileMessageByCesar(fileTestcase):
+	data = readfile("testcase/"+fileTestcase)
+	print("Enter cesar key from 1 to 25")
+	CesarKey = int(input())
+	if CesarKey > 25 or CesarKey <1:
+		raise ValueError("Invalid key.")
+	cipher = MahoaCesar(data,CesarKey)
+	print("-----------------------------------")
+	print("Plaintext:")
+	print(data)
+	print("-----------------------------------")
+	print("Cesar cipher with key = " + str(CesarKey) +":")
+	print(cipher)
+	print("-----------------------------------")
+	# write cipher result to file text
+	file_name_dest = "cipher_of_" + fileTestcase
+	overwritefile("cipher_cesar/" + file_name_dest, cipher)
+	#  write final result
+	file_result = 'result_' + fileTestcase 
+	content = "-----------------------------------"  + "\nPlaintext:\n" + data + "\n-----------------------------------" + "\nCesar cipher with key = " + str(CesarKey) + ":\n"+ cipher + "\n-----------------------------------\n"
+	overwritefile("result_hacking_cesar/" + file_result, content)
+
+	return file_name_dest	
+
 def encryptFileMessageByProduct(fileTestcase):
 	data = readfile("testcase/"+fileTestcase)
 	print("Enter cesar key from 1 to 25")
@@ -133,6 +157,29 @@ if __name__ == "__main__":
 		# write file
 		file_result = 'result_' + args.testcase 
 		writefile("result_hacking_product/"+file_result, "We calculate the key of "+args.testcase+ ":\n" +"Cesar key: "+ str(resultHacking['key_cesar']) +"\nRail fence key: " + str(resultHacking['key_rail_fence']) + "\nElapsed_time: {0}".format(elapsed_time) + "[sec]"+"\nScore:\n" + str(resultHacking['score'])  +"\nPlaintext:\n" + resultHacking['plaintext'] )
+
+	elif args.method == "cesar":
+		# encrypt
+		file_name_dest = encryptFileMessageByCesar(args.testcase)
+		# hacking
+		cipher = readfile("cipher_cesar/" +file_name_dest)
+		print("Attack cesar cipher:")
+		start_time = time.time()
+
+					# write file
+
+		file_result = 'result_' + args.testcase 
+		writefile("result_hacking_cesar/"+file_result, "\n-----------------------------------\nAttack Cesar cipher:\n" )
+
+# key from 1 to 25
+		for i in range(1, 26):
+			print("key = ", i)
+			plaintext = TanCongCesar(cipher, i)
+			print(plaintext)
+			writefile("result_hacking_cesar/"+file_result, "\n-----------------------------------\nKey: "+ str(i) + "\nPlaintext decrypted: \n" + plaintext)
+
+		end_time = time.time()
+		elapsed_time = end_time - start_time
 
 	else:
 		raise ValueError("Invalid method.")
