@@ -47,6 +47,22 @@ class Decrypt_withEngDic:
         candidates.sort(key=lambda c: c['score'], reverse=True)
         return candidates[0]
 
+    def attack_Cesar(self, ciphertext):
+        candidates = []
+        for key_candidate in range(1, 26):
+            plaintext_candidate = TanCongCesar(ciphertext, key_candidate)
+            candidate_score = self.get_english_score(plaintext_candidate)
+            result = {
+                'keyCesar': key_candidate,
+                'score': candidate_score,
+                'plaintext': plaintext_candidate
+            }
+
+            candidates.append(result) 
+
+        candidates.sort(key=lambda c: c['score'], reverse=True)
+        return candidates[0]    
+
     def attack_Product(self, ciphertext):
         keyRail_fence_max =  len(ciphertext) - 1
         candidates = []

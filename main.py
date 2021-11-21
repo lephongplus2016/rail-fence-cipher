@@ -103,6 +103,16 @@ def printHackingResult(resultHacking, elapsed_time):
 		print(resultHacking['score'])
 		print('Plaintext:')
 		print(resultHacking['plaintext'])
+	elif 'keyCesar' in resultHacking:
+		print("-----------------------------------")
+		print('Attack Cesar Cipher with English Dictionary:')
+		print('We calculate the key:')
+		print('Cesar key: ' + str(resultHacking['keyCesar']))
+		print ("Elapsed_time: {0}".format(elapsed_time) + "[sec]")
+		print('Score:')
+		print(resultHacking['score'])
+		print('Plaintext:')
+		print(resultHacking['plaintext'])
 	else:
 		print('Attack Product Cipher with English Dictionary:')
 		print('We calculate the key:')
@@ -161,7 +171,7 @@ if __name__ == "__main__":
 	elif args.method == "cesar":
 		# encrypt
 		file_name_dest = encryptFileMessageByCesar(args.testcase)
-		# hacking
+		# hacking by brute force
 		cipher = readfile("cipher_cesar/" +file_name_dest)
 		print("Attack cesar cipher:")
 		start_time = time.time()
@@ -183,5 +193,21 @@ if __name__ == "__main__":
 		elapsed_time = end_time - start_time
 		print ("Elapsed_time: {0}".format(elapsed_time) + "[sec]")
 		writefile("result_hacking_cesar/"+file_result, "\n\nElapsed_time: {0}".format(elapsed_time) + "[sec]")
+
+		# hacking by english dic
+		cipherProduct = readfile("cipher_cesar/" +file_name_dest)
+		decrypt_withEngDic_Instance = Decrypt_withEngDic()
+		start_time = time.time()
+
+		resultHacking = decrypt_withEngDic_Instance.attack_Cesar(cipherProduct)
+		end_time = time.time()
+		elapsed_time = end_time - start_time
+		# print(resultHacking)
+		# print result
+		printHackingResult(resultHacking, elapsed_time)
+		# write result file
+		writefile("result_hacking_cesar/"+file_result, "\n-----------------------------------\nAttack Cesar Cipher with English Dictionary:\nWe calculate the key"+ ":\n" +"Cesar key: "+ str(resultHacking['keyCesar']) +  "\nElapsed_time: {0}".format(elapsed_time) + "[sec]"+"\nScore:\n" + str(resultHacking['score'])  +"\nPlaintext:\n" + resultHacking['plaintext'] )
+
+
 	else:
 		raise ValueError("Invalid method.")
